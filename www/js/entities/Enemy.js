@@ -13,7 +13,6 @@ function Enemy(_enemyType) {
 	this.turnValue; //1 steps every turn, 2 steps every two turns and so on.
 	
 	
-	
 	this.currentShowingSprite; //current sprite. I still need to think of how I will handle animations. leave me alone.
 	this.currentHP; //
 	this.currentMP; //

@@ -6,4 +6,10 @@ function EnemyParty (_frontLeftEnemy, _frontRightEnemy, _backLeftEnemy, _backRig
 		"back-left":"",
 		"back-right":"",
 	};
+
+	var currentPartyFace;
+
+	this.getCurrentPartyFace = function () {
+		return currentPartyFace;
+	}
 }

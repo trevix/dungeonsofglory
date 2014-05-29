@@ -27,23 +27,6 @@ function Gameplay() {
 	var currentWorldMap;
 	var currentVisibilityMap;
 
-
-	currentWorldMap = [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,],
-					   [2,0,0,0,0,0,0,0,0,0,0,0,0,2,],
-					   [2,1,1,1,1,1,1,1,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,1,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,0,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,0,0,0,0,0,2,],
-					   [2,0,0,0,0,0,0,0,0,0,0,0,0,2,],
-					   [2,2,2,2,2,2,2,2,2,2,2,2,2,2,]];
-
-
 	var mapWidth;
 	var mapHeight;
 	var miniMapSize;
@@ -74,7 +57,7 @@ function Gameplay() {
 	var basePositions = [[{"x":TILEWIDTH*1, "y":TILEHEIGHT*0},		{"x":TILEWIDTH*1.5, "y":TILEHEIGHT*0.5},	{"x":TILEWIDTH*2, "y":TILEHEIGHT*1}],
 						[ {"x":TILEWIDTH*0.5, "y":TILEHEIGHT*0.5},	{"x":TILEWIDTH, "y":TILEHEIGHT},		{"x":TILEWIDTH*1.5, "y":TILEHEIGHT*1.5}],
 						[ {"x":TILEWIDTH*0, "y":TILEHEIGHT},		{"x":TILEWIDTH*0.5, "y":TILEHEIGHT*1.5},{"x":TILEWIDTH, "y":TILEHEIGHT*2}]];
-	var currentShowingTiles = [	
+	var currentShowingTiles = [
 								[new Tile(0), new Tile(0), new Tile(0)],
 								[new Tile(0), new Tile(0), new Tile(0)],
 								[new Tile(0), new Tile(0), new Tile(0)] 
@@ -91,27 +74,22 @@ function Gameplay() {
 	this.buildScreen = function () {
 		currentWorldMap = new Map(0);
 		currentMapController = new MapController(currentWorldMap);
-		mapWidth = currentWorldMap.length;
-		mapHeight = currentWorldMap[0].length;
-		currentPlayerPositionAtMap.x = parseInt(currentWorldMap.length/2);
-		currentPlayerPositionAtMap.y = parseInt(currentWorldMap[0].length/2);
-		currentWorldMap[currentPlayerPositionAtMap.x][currentPlayerPositionAtMap.y] = 0;
+		mapWidth = currentMapController.getMapWidth();
+		mapHeight = currentMapController.getMapWidth();
+		currentPlayerPositionAtMap.x = parseInt(mapWidth/2);
+		currentPlayerPositionAtMap.y = parseInt(mapWidth/2);
+		currentMapController.setMapContent(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y, 0);
 		main.appendContainer();
 		
-
 		currentMapController.resetVisibility();
 		currentObject.appendMinimap();
 		currentObject.appendIngameMap();
-		//$("#tilesContainer").css("height", TILEHEIGHT*4+"px");
-		//use wrapper to prevent lateral scrolling;
-		//$("#container").append("<div id='gameplayWrapper' style='overflow:hidden;'></div>");
 		$("#tilesContainer").touchmove = function (e) {
 			e.preventDefault();
 		}
 
 		//set z-index
-		currentObject.updateZindex();
-		
+		currentObject.updateZindex();		
 		this.setEvents();
 		
 	}
@@ -198,190 +176,8 @@ function Gameplay() {
 		currentObject.repositionTile("_auxPosition");
 	}
 
-	this.setVisibilityOnMiniMap = function (_x, _y) {
-		currentVisibilityMap[_y][_x] = 1;
-	}
-
 	this.updateDraw = function () {
 		currentObject.updateTileContainerContent();
-	}
-
-	this.updateDrawDEPRECATED = function () {
-		var divsToBeRemoved = [];
-		var recentlyAddedDivs = [];
-
-		var difX = 0;
-		var difY = 0;
-		switch(currentPlayerNextMove){
-			case "left":
-				difX = -1;
-				currentObject.swapTiles( "#ingame_tile_0_-1", "#ingame_tile_0_0" );
-				currentObject.swapTiles( "#ingame_tile_1_-1", "#ingame_tile_1_0" );
-				currentObject.swapTiles( "#ingame_tile_2_-1", "#ingame_tile_2_0" );
-				currentObject.fadeOutTile( "#ingame_tile_0_0" );
-				currentObject.fadeOutTile( "#ingame_tile_1_0" );
-				currentObject.fadeOutTile( "#ingame_tile_2_0" );
-			break;
-			case "right":
-				difX = 1;
-				currentObject.swapTiles( "#ingame_tile_0_3", "#ingame_tile_0_2" );
-				currentObject.swapTiles( "#ingame_tile_1_3", "#ingame_tile_1_2" );
-				currentObject.swapTiles( "#ingame_tile_2_3", "#ingame_tile_2_2" );
-				currentObject.fadeOutTile( "#ingame_tile_0_2" );
-				currentObject.fadeOutTile( "#ingame_tile_1_2" );
-				currentObject.fadeOutTile( "#ingame_tile_2_2" );
-			break;
-			case "up":
-				difY = -1;
-				currentObject.swapTiles( "#ingame_tile_-1_0", "#ingame_tile_0_0" );
-				currentObject.swapTiles( "#ingame_tile_-1_1", "#ingame_tile_0_1" );
-				currentObject.swapTiles( "#ingame_tile_-1_2", "#ingame_tile_0_2" );
-				currentObject.fadeOutTile( "#ingame_tile_0_0" );
-				currentObject.fadeOutTile( "#ingame_tile_0_1" );
-				currentObject.fadeOutTile( "#ingame_tile_0_2" );
-			break;
-			case "down":
-				difY = 1;
-				currentObject.swapTiles( "#ingame_tile_-1_0", "#ingame_tile_0_0" );
-				currentObject.swapTiles( "#ingame_tile_-1_1", "#ingame_tile_0_1" );
-				currentObject.swapTiles( "#ingame_tile_-1_2", "#ingame_tile_0_2" );
-				currentObject.fadeOutTile( "#ingame_tile_0_0" );
-				currentObject.fadeOutTile( "#ingame_tile_0_1" );
-				currentObject.fadeOutTile( "#ingame_tile_0_2" );
-			break;
-		}
-
-		//move all tile containers to their new positions.
-		//currentObject.swapTiles("#ingame_tile_0_0", "#ingame_tile_0_-1"); //example
-		for(var i=0; i<gameMapSize; i++){
-			for(var j=0; j<gameMapSize; j++){
-				currentObject.swapTiles( ("#ingame_tile_"+i+"_"+j), ("#ingame_tile_"+(i+difY)+"_"+(j+difX) ) );
-			}
-		}
-	}
-	
-	var _targetTile;
-	var _targetPosition;
-
-	this.swapTiles = function (_targetTile, _targetPosition) {
-		var targetLeft = $( _targetPosition ).css("left");
-		var targetTop = $( _targetPosition ).css("top");
-		
-		var targetID = _targetPosition.replace('#', "");
-		var targetNewID = "REMOVEABLE_"+$(_targetPosition).attr("id");
-
-		$(_targetTile).attr("id", targetID );
-		$(_targetPosition).attr("id", targetNewID);
-
-		TweenLite.to("#"+targetID, GAMESPEED, {alpha:1, css: { "left":targetLeft, "top":targetTop  }, onComplete: function (_targetTile, _targetPosition) {
-			tilesToRemove[tilesToRemove.length] = $(_targetPosition);
-			console.log("targetID: " + targetID + " target new id:" + targetNewID);
-		} });
-		TweenLite.to("#"+targetNewID, GAMESPEED/2, {alpha:0, delay:GAMESPEED/2});
-	}
-
-	this.resetVisibility = function () {
-		currentVisibilityMap = [];
-		for(var i = 0; i<currentWorldMap.length; i++){
-			currentVisibilityMap[i] = [];
-			for(var j = 0; j<currentWorldMap[i].length; j++){
-				currentVisibilityMap[i][j] = 0;
-			}
-		}
-	}
-
-	this.fadeOutTile = function (_targetTile) {
-		console.log(_targetTile);
-		$(_targetTile).css("opacity", 0);
-	}
-
-	this.createMissingTiles = function () {
-		if( $("#ingame_tile_-1_0") == null ||  $("#ingame_tile_-1_0") == undefined ){
-			$("#tilesContainer").append("<div id='ingame_tile_-1_0' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_-1_1' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_-1_2' class='tileContainer noclick'></div>");
-			currentObject.positionTileAt(new_tile_left_up, -1, 0);
-			currentObject.positionTileAt(new_tile_up, -1, 1);
-			currentObject.positionTileAt(new_tile_right_up, -1, 2);
-		}
-		
-		if( $("#ingame_tile_3_0") == null ||  $("#ingame_tile_3_0") == undefined ){
-			$("#tilesContainer").append("<div id='ingame_tile_3_0' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_3_1' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_3_2' class='tileContainer noclick'></div>");
-			currentObject.positionTileAt(new_tile_left_down, 3, 0);
-			currentObject.positionTileAt(new_tile_down, 3, 1);
-			currentObject.positionTileAt(new_tile_right_down, 3, 2);
-		}
-
-		if( $("#ingame_tile_0_-1") == null ||  $("#ingame_tile_0_-1") == undefined ){
-			$("#tilesContainer").append("<div id='ingame_tile_0_-1' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_1_-1' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_2_-1' class='tileContainer noclick'></div>");
-			currentObject.positionTileAt(new_tile_left_up, 0, -1);
-			currentObject.positionTileAt(new_tile_left, 1, -1);
-			currentObject.positionTileAt(new_tile_left_down, 2, -1);
-		}
-
-		if( $("#ingame_tile_0_3") == null ||  $("#ingame_tile_0_3") == undefined ){
-			$("#tilesContainer").append("<div id='ingame_tile_0_3' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_1_3' class='tileContainer noclick'></div>");
-			$("#tilesContainer").append("<div id='ingame_tile_2_3' class='tileContainer noclick'></div>");
-			currentObject.positionTileAt(new_tile_right_up, 0, 3);
-			currentObject.positionTileAt(new_tile_right, 1, 3);
-			currentObject.positionTileAt(new_tile_right_down, 2, 3);
-		}
-	}
-
-	this.createNewTiles = function (_direction) {
-		currentObject.createMissingTiles();
-		switch(_direction){
-			case "up":
-				$(new_tile_left_up).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x-1][currentPlayerPositionAtMap.y-1] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_up).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x][currentPlayerPositionAtMap.y-1] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_right_up).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x+1][currentPlayerPositionAtMap.y-1] ) );
-				//currentObject.repositionTile("_auxPosition");
-			break;
-			case "down":
-				$(new_tile_left_down).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x-1][currentPlayerPositionAtMap.y+1] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_down).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x][currentPlayerPositionAtMap.y+1] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_right_down).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x+1][currentPlayerPositionAtMap.y+1] ) );
-				//currentObject.repositionTile("_auxPosition");
-			break;
-			case "left":
-				$(new_tile_left_up).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x-1][currentPlayerPositionAtMap.y-1] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_left).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x-1][currentPlayerPositionAtMap.y] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_left_down).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x-1][currentPlayerPositionAtMap.y+1] ) );
-				//currentObject.repositionTile("_auxPosition");
-			break;
-			case "right":
-				$(new_tile_right_up).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x+1][currentPlayerPositionAtMap.y-1] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_right).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x+1][currentPlayerPositionAtMap.y] ) );
-				//currentObject.repositionTile("_auxPosition");
-				$(new_tile_right_down).html( currentObject.receiveTileImageResult( 
-					currentWorldMap[ currentPlayerPositionAtMap.x+1][currentPlayerPositionAtMap.y+1] ) );
-				//currentObject.repositionTile("_auxPosition");
-			break;
-		}
-
 	}
 
 	this.appendMinimap = function () {
@@ -535,23 +331,6 @@ function Gameplay() {
 		
 	}
 
-	this.checkPositionContent = function (_targetX, _targetY) {
-		//check if there's an enemy
-
-		//check if it's walkable
-		switch ( currentWorldMap[ _targetX ][ _targetY ] ) {
-			case 0:
-			case 3:
-				return "floor";
-			break;
-			case 1:
-			case 2:
-				return "wall";
-			break;
-		}
-		
-	}
-
 	this.loadSavedData = function () {
 
 	}
@@ -563,71 +342,14 @@ function Gameplay() {
 		currentObject.updateMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y);
 	}
 
-	this.playerStep = function () {
-		//move player, first. (virtually, not visually);
-
-		if(currentPlayerNextMove != "none"){
-			currentObject.createNewTiles(currentPlayerNextMove);
-			currentObject.updateZindex();
-		}
-		
+	this.playerStep = function () {		
 	}
 
 	this.enemyStep = function () {
 
 	}
 
-	
-
-	this.receiveTileImageResult = function (_which) {
-		var returnImage;
-		switch(_which){
-			case 0:
-				returnImage = loadedimages[0].cloneNode(true);
-			break;
-			case 1:
-				returnImage = loadedimages[1].cloneNode(true);
-			break;
-			case 2:
-				returnImage = loadedimages[2].cloneNode(true);
-			break;
-			case 3:
-				returnImage = loadedimages[3].cloneNode(true);
-			break;
-			default:
-				returnImage = loadedimages[0].cloneNode(true);
-			break;
-		}
-
-		returnImage.id = "_auxPosition";
-		return returnImage;
-	}
-
-	this.MinimapReceiveTileImageResult = function (_x, _y) {
-		var currentTileContent = currentMapController.checkPositionContent(_x, _y);
-		var returnValue;
-
-		switch(currentTileContent){
-			case "wall":
-				returnValue = 0.2;
-			break;
-			case "floor":
-				returnValue = 0.75;
-			break;
-			default:
-				returnValue = 0.75;
-			break;
-		}
-
-		if(currentVisibilityMap[_y][_x] == 0){
-			returnValue = 0;
-		}
-
-		return returnValue;
-	}
-
 	this.repositionTile = function (_id) {
-
 		var returnImage = $("#"+_id);
 		if(returnImage != null || returnImage != undefined){
 

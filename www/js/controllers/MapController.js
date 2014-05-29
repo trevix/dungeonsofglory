@@ -9,19 +9,25 @@ function MapController (_mapGrid) {
 
 	if(currentWorldMap == null || currentWorldMap == undefined)
 	{
-		currentWorldMap = [[0,0,0],
-						  [0,0,0],
-						  [0,0,0]];
+		console.log("error loading map, dude!");
+		currentWorldMap = [];
 	}
 	//////////////
-
 
 	this.getMapContent = function (_x, _y) {
 		return currentWorldMap[_x][_y];
 	}
 
+	this.setMapContent = function (_x, _y, _value) {
+		currentWorldMap[_x][_y] = _value;
+	}
+
 	this.updateCurrentWorldMap = function (_newMap) {
 		currentWorldMap = _newMap;
+	}
+
+	this.getMapWidth = function () {
+		return currentWorldMap.length;
 	}
 
 
@@ -30,7 +36,7 @@ function MapController (_mapGrid) {
 	this.setVisibilityOnMiniMap = function (_x, _y) {
 		currentVisibilityMap[_y][_x] = 1;
 	}
-	
+
 	this.resetVisibility = function () {
 		currentVisibilityMap = [];
 		for(var i = 0; i<currentWorldMap.length; i++){
