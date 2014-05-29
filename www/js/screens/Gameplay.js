@@ -98,7 +98,8 @@ function Gameplay() {
 		currentWorldMap[currentPlayerPositionAtMap.x][currentPlayerPositionAtMap.y] = 0;
 		main.appendContainer();
 		
-		currentObject.resetVisibility();
+
+		currentMapController.resetVisibility();
 		currentObject.appendMinimap();
 		currentObject.appendIngameMap();
 		//$("#tilesContainer").css("height", TILEHEIGHT*4+"px");
@@ -169,31 +170,31 @@ function Gameplay() {
 
 	this.updateTileContainerContent = function () {
 		$(tile_center).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_left).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_left_up).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y-1 ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y-1);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y-1);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_left_down).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y+1 ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y+1);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y+1);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_up).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1 ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_right).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_right_up).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y-1 ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y-1);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y-1);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_right_down).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y+1 ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y+1);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y+1);
 		currentObject.repositionTile("_auxPosition");
 		$(tile_down).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1 ) );
-		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1);
+		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1);
 		currentObject.repositionTile("_auxPosition");
 	}
 
@@ -432,7 +433,7 @@ function Gameplay() {
 
 		for(var i=0; i<miniMapSize; i++){
 			for(var j=0; j<miniMapSize; j++){
-				$("#mp_tile_"+i+"_"+j).css("opacity", currentObject.MinimapReceiveTileImageResult( j+startX,  i+startY ) );
+				$("#mp_tile_"+i+"_"+j).css("opacity", currentMapController.MinimapReceiveTileImageResult( j+startX,  i+startY ) );
 				if(currentPlayerPositionAtMap.x == j+startX && currentPlayerPositionAtMap.y == i+startY){ //move player indicator to minimap
 					$("#mp_hero").css("left", $("#mp_tile_"+i+"_"+j).css("left") );
 					$("#mp_hero").css("top", $("#mp_tile_"+i+"_"+j).css("top") );

@@ -1,9 +1,11 @@
 function MapController (_mapGrid) {
+	//constructor stuff
+
 	var currentObject = this;
 
 	var currentWorldMap;
+	var currentVisibilityMap;
 	currentWorldMap = _mapGrid;
-
 
 	if(currentWorldMap == null || currentWorldMap == undefined)
 	{
@@ -11,14 +13,37 @@ function MapController (_mapGrid) {
 						  [0,0,0],
 						  [0,0,0]];
 	}
+	//////////////
+
 
 	this.getMapContent = function (_x, _y) {
 		return currentWorldMap[_x][_y];
 	}
 
+	this.updateCurrentWorldMap = function (_newMap) {
+		currentWorldMap = _newMap;
+	}
+
+
+	// minimap visibility
+
+	this.setVisibilityOnMiniMap = function (_x, _y) {
+		currentVisibilityMap[_y][_x] = 1;
+	}
+	
+	this.resetVisibility = function () {
+		currentVisibilityMap = [];
+		for(var i = 0; i<currentWorldMap.length; i++){
+			currentVisibilityMap[i] = [];
+			for(var j = 0; j<currentWorldMap[i].length; j++){
+				currentVisibilityMap[i][j] = 0;
+			}
+		}
+	}
+
 	this.receiveTileImageResult = function (_x, _y) {
 		var returnImage;
-		
+
 		var mapTileValue = currentObject.getMapContent(_x, _y);
 
 		switch(mapTileValue){
@@ -79,9 +104,5 @@ function MapController (_mapGrid) {
 		}
 
 		return returnValue;
-	}
-
-	this.updateCurrentWorldMap = function (_newMap) {
-		currentWorldMap = _newMap;
 	}
 }
