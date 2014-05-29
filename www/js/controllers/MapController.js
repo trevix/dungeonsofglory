@@ -1,6 +1,10 @@
 function MapController (_mapGrid) {
+	var currentObject = this;
+
 	var currentWorldMap;
 	currentWorldMap = _mapGrid;
+
+
 	if(currentWorldMap == null || currentWorldMap == undefined)
 	{
 		currentWorldMap = [[0,0,0],
@@ -32,6 +36,44 @@ function MapController (_mapGrid) {
 
 		returnImage.id = "_auxPosition";
 		return returnImage;
+	}
+
+	this.checkPositionContent = function (_targetX, _targetY) {
+		//check if it's walkable
+		switch ( currentWorldMap[ _targetX ][ _targetY ] ) {
+			case 0:
+			case 3:
+				return "floor";
+			break;
+			case 1:
+			case 2:
+				return "wall";
+			break;
+		}
+		
+	}
+
+	this.MinimapReceiveTileImageResult = function (_x, _y) {
+		var currentTileContent = currentObject.checkPositionContent(_x, _y);
+		var returnValue;
+
+		switch(currentTileContent){
+			case "wall":
+				returnValue = 0.2;
+			break;
+			case "floor":
+				returnValue = 0.75;
+			break;
+			default:
+				returnValue = 0.75;
+			break;
+		}
+
+		if(currentVisibilityMap[_y][_x] == 0){
+			returnValue = 0;
+		}
+
+		return returnValue;
 	}
 
 	this.updateCurrentWorldMap = function (_newMap) {

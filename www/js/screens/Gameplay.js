@@ -62,6 +62,9 @@ function Gameplay() {
 	var currentItemsOnMap = [];
 	var tilesToRemove = [];
 
+	//controllers
+	var currentMapController;
+
 
 	//I don't even know if I'm gonna use this.
 	var baseDivNames = [["tile_left_up", "tile_up", "tile_right_up"],
@@ -87,6 +90,7 @@ function Gameplay() {
 
 	this.buildScreen = function () {
 		currentWorldMap = new Map(0);
+		currentMapController = new MapController(currentWorldMap);
 		mapWidth = currentWorldMap.length;
 		mapHeight = currentWorldMap[0].length;
 		currentPlayerPositionAtMap.x = parseInt(currentWorldMap.length/2);
@@ -483,7 +487,7 @@ function Gameplay() {
 		switch(_direction){
 			case "left":
 				if(currentPlayerPositionAtMap.x > 0){
-					switch(currentObject.checkPositionContent(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y))
+					switch(currentMapController.checkPositionContent(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y))
 					{
 						case "floor":
 							currentPlayerNextMove = "left";
@@ -494,7 +498,7 @@ function Gameplay() {
 			break;
 			case "right":
 				if(currentPlayerPositionAtMap.x < mapWidth){
-					switch(currentObject.checkPositionContent(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y))
+					switch(currentMapController.checkPositionContent(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y))
 					{
 						case "floor":
 							currentPlayerNextMove = "right";
@@ -505,7 +509,7 @@ function Gameplay() {
 			break;
 			case "up":
 			if(currentPlayerPositionAtMap.y > 0){
-				switch( currentObject.checkPositionContent(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1) )
+				switch( currentMapController.checkPositionContent(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1) )
 				{
 					case "floor":
 						currentPlayerNextMove = "up";
@@ -516,7 +520,7 @@ function Gameplay() {
 			break;
 			case "down":
 			if(currentPlayerPositionAtMap.y < mapHeight){
-				switch(currentObject.checkPositionContent(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1))
+				switch(currentMapController.checkPositionContent(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1))
 				{
 					case "floor":
 						currentPlayerNextMove = "down";
@@ -599,7 +603,7 @@ function Gameplay() {
 	}
 
 	this.MinimapReceiveTileImageResult = function (_x, _y) {
-		var currentTileContent = currentObject.checkPositionContent(_x, _y);
+		var currentTileContent = currentMapController.checkPositionContent(_x, _y);
 		var returnValue;
 
 		switch(currentTileContent){
