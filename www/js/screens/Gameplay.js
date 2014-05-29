@@ -168,31 +168,31 @@ function Gameplay() {
 	}
 
 	this.updateTileContainerContent = function () {
-		$(tile_center).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x][currentPlayerPositionAtMap.y] ) );
+		$(tile_center).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_left).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x-1 ][currentPlayerPositionAtMap.y] ) );
+		$(tile_left).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_left_up).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x-1 ][currentPlayerPositionAtMap.y-1] ) );
+		$(tile_left_up).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y-1 ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y-1);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_left_down).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x-1 ][currentPlayerPositionAtMap.y+1] ) );
+		$(tile_left_down).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y+1 ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y+1);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_up).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x][currentPlayerPositionAtMap.y-1] ) );
+		$(tile_up).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1 ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_right).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x+1 ][currentPlayerPositionAtMap.y] ) );
+		$(tile_right).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_right_up).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x+1 ][currentPlayerPositionAtMap.y-1] ) );
+		$(tile_right_up).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y-1 ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y-1);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_right_down).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x+1 ][currentPlayerPositionAtMap.y+1] ) );
+		$(tile_right_down).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y+1 ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y+1);
 		currentObject.repositionTile("_auxPosition");
-		$(tile_down).html( currentObject.receiveTileImageResult( currentWorldMap[ currentPlayerPositionAtMap.x][currentPlayerPositionAtMap.y+1] ) );
+		$(tile_down).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1 ) );
 		currentObject.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1);
 		currentObject.repositionTile("_auxPosition");
 	}

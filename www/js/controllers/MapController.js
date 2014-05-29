@@ -12,9 +12,14 @@ function MapController (_mapGrid) {
 						  [0,0,0]];
 	}
 
+	this.getMapContent = function (_x, _y) {
+		return currentWorldMap[_x][_y];
+	}
+
 	this.receiveTileImageResult = function (_x, _y) {
 		var returnImage;
-		var mapTileValue = currentWorldMap[_x][_y];
+		
+		var mapTileValue = currentObject.getMapContent(_x, _y);
 
 		switch(mapTileValue){
 			case 0:
