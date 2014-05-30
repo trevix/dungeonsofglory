@@ -11,20 +11,33 @@ function Gameplay() {
 	var tile_right = "#ingame_tile_1_2";
 	var tile_right_down = "#ingame_tile_2_2";
 
-	var new_tile_left_up = "#ingame_tile_0_-1";
-	var new_tile_left = "#ingame_tile_2_-1";
-	var new_tile_left_down = "#ingame_tile_2_-1";
-	var new_tile_up = "#ingame_tile_-1_1";
-	var new_tile_center = "#new_ingame_tile_1_1";
-	var new_tile_down = "#new_ingame_tile_3_1";
-	var new_tile_right_up = "#ingame_tile_0_3";
-	var new_tile_right = "#ingame_tile_1_3";
-	var new_tile_right_down = "#ingame_tile_2_3";
+	var monster_tile_left_up = "#monster_ingame_tile_0_0";
+	var monster_tile_left = "#monster_ingame_tile_1_0";
+	var monster_tile_left_down = "#monster_ingame_tile_2_0";
+	var monster_tile_up = "#monster_ingame_tile_0_1";
+	var monster_tile_center = "#monster_ingame_tile_1_1";
+	var monster_tile_down = "#monster_ingame_tile_2_1";
+	var monster_tile_right_up = "#monster_ingame_tile_0_2";
+	var monster_tile_right = "#monster_ingame_tile_1_2";
+	var monster_tile_right_down = "#monster_ingame_tile_2_2";
+
+	var item_tile_left_up = "#item_ingame_tile_0_0";
+	var item_tile_left = "#item_ingame_tile_1_0";
+	var item_tile_left_down = "#item_ingame_tile_2_0";
+	var item_tile_up = "#item_ingame_tile_0_1";
+	var item_tile_center = "#item_ingame_tile_1_1";
+	var item_tile_down = "#item_ingame_tile_2_1";
+	var item_tile_right_up = "#item_ingame_tile_0_2";
+	var item_tile_right = "#item_ingame_tile_1_2";
+	var item_tile_right_down = "#item_ingame_tile_2_2";
 
 	//VARS
 	var currentObject = this;
 	var currentPlayerPositionAtMap = {"x":0, "y":0};
+	this.currentPlayerPositionAtMap = function () { return currentPlayerPositionAtMap; } ;
 	var currentWorldMap;
+	this.currentWorldMap = function () { return currentWorldMap; } ;
+
 	var currentVisibilityMap;
 
 	var mapWidth;
@@ -42,11 +55,13 @@ function Gameplay() {
 	};
 	//lists
 	var currentEnemiesOnMap = [];
-	var currentItemsOnMap = [];
+	var currentItemList = [];
 	var tilesToRemove = [];
 
 	//controllers
 	var currentMapController;
+	var currentEnemyController;
+	var currentItemController;
 
 
 	//I don't even know if I'm gonna use this.
@@ -73,7 +88,11 @@ function Gameplay() {
 
 	this.buildScreen = function () {
 		currentWorldMap = new Map(0);
-		currentMapController = new MapController(currentWorldMap);
+		console.log(currentWorldMap);
+		currentMapController = new MapController( currentObject );
+		currentEnemyController = new EnemyController( currentObject );
+		currentItemController = new ItemController( currentObject );
+
 		mapWidth = currentMapController.getMapWidth();
 		mapHeight = currentMapController.getMapWidth();
 		currentPlayerPositionAtMap.x = parseInt(mapWidth/2);
@@ -81,8 +100,8 @@ function Gameplay() {
 		currentMapController.setMapContent(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y, 0);
 		main.appendContainer();
 		
+		currentMapController.appendMinimap();
 		currentMapController.resetVisibility();
-		currentObject.appendMinimap();
 		currentObject.appendIngameMap();
 		$("#tilesContainer").touchmove = function (e) {
 			e.preventDefault();
@@ -106,14 +125,25 @@ function Gameplay() {
 		$(tile_down).css("z-index", "14" );
 		$(tile_right_down).css("z-index", "15" );
 
-		$(new_tile_left_up).css("z-index", "10" );
-		$(new_tile_left).css("z-index", "11" );
-		$(new_tile_up).css("z-index", "11" );
-		$(new_tile_left_down).css("z-index", "12" );
-		$(new_tile_right_up).css("z-index", "12" );
-		$(new_tile_right).css("z-index", "14" );
-		$(new_tile_down).css("z-index", "14" );
-		$(new_tile_right_down).css("z-index", "15" );
+		$(monster_tile_left_up).css("z-index", "11" );
+		$(monster_tile_left).css("z-index", "12" );
+		$(monster_tile_up).css("z-index", "12" );
+		$(monster_tile_left_down).css("z-index", "13" );
+		$(monster_tile_right_up).css("z-index", "13" );
+		$(monster_tile_center).css("z-index", "13" );
+		$(monster_tile_right).css("z-index", "15" );
+		$(monster_tile_down).css("z-index", "15" );
+		$(monster_tile_right_down).css("z-index", "16" );
+
+		$(item_tile_left_up).css("z-index", "11" );
+		$(item_tile_left).css("z-index", "12" );
+		$(item_tile_up).css("z-index", "12" );
+		$(item_tile_left_down).css("z-index", "13" );
+		$(item_tile_right_up).css("z-index", "13" );
+		$(item_tile_center).css("z-index", "13" );
+		$(item_tile_right).css("z-index", "15" );
+		$(item_tile_down).css("z-index", "15" );
+		$(item_tile_right_down).css("z-index", "16" );
 	}
 
 	this.appendIngameMap = function () {
@@ -128,7 +158,13 @@ function Gameplay() {
 			for(var j=0; j<gameMapSize; j++){
 				$("#tilesContainer").append("<div id='ingame_tile_"+i+"_"+j+"' class='tileContainer noclick'></div>");
 				$("#ingame_tile_"+i+"_"+j).css("width", (TILEWIDTH) + "px");
+				$("#tilesContainer").append("<div id='monster_ingame_tile_"+i+"_"+j+"' class='tileContainer noclick'></div>");
+				$("#monster_ingame_tile_"+i+"_"+j).css("width", (TILEWIDTH) + "px");
+				$("#tilesContainer").append("<div id='item_ingame_tile_"+i+"_"+j+"' class='tileContainer noclick'></div>");
+				$("#item_ingame_tile_"+i+"_"+j).css("width", (TILEWIDTH) + "px");
 				currentObject.positionTileAt( ("#ingame_tile_"+i+"_"+j+""), i, j);
+				currentObject.positionTileAt( ("#monster_ingame_tile_"+i+"_"+j+""), i, j);
+				currentObject.positionTileAt( ("#item_ingame_tile_"+i+"_"+j+""), i, j);
 			}
 		}
 		currentObject.updateTileContainerContent();
@@ -174,68 +210,30 @@ function Gameplay() {
 		$(tile_down).html( currentMapController.receiveTileImageResult( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1 ) );
 		currentMapController.setVisibilityOnMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1);
 		currentObject.repositionTile("_auxPosition");
+
+		$(monster_tile_center).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y ) );
+		$(monster_tile_left).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y ) );
+		$(monster_tile_left_down).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y+1 ) );
+		$(monster_tile_left_up).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y-1 ) );
+		$(monster_tile_up).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1 ) );
+		$(monster_tile_right).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y ) );
+		$(monster_tile_right_up).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y-1 ) );
+		$(monster_tile_right_down).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y+1 ) );
+		$(monster_tile_down).html( currentEnemyController.getEnemyAtPosition( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1 ) );
+
+		$(item_tile_center).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y ) );
+		$(item_tile_left).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y ) );
+		$(item_tile_left_down).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y+1 ) );
+		$(item_tile_left_up).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x-1, currentPlayerPositionAtMap.y-1 ) );
+		$(item_tile_up).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y-1 ) );
+		$(item_tile_right).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y ) );
+		$(item_tile_right_up).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y-1 ) );
+		$(item_tile_right_down).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x+1, currentPlayerPositionAtMap.y+1 ) );
+		$(item_tile_down).html( currentItemController.getItemAtPosition( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y+1 ) );
 	}
 
 	this.updateDraw = function () {
 		currentObject.updateTileContainerContent();
-	}
-
-	this.appendMinimap = function () {
-		$("#container").append("<div id='minimapContainer' class='minimapContainer'></div>");
-		miniMapSize = 9;
-		if(miniMapSize > mapWidth){
-			miniMapSize = mapWidth;
-		}
-		miniMapTileWidth = TILEWIDTH/10;
-		miniMapTileHeight = TILEHEIGHT/10;
-		
-		$("#minimapContainer").append("<div id='mp_hero' class='minimapTileContainer minimapHero'></div>");
-		$("#mp_hero").html( loadedimages[8] );
-		$("#mp_hero").css("width", (miniMapTileWidth) + "px");
-		for(var i=0; i<miniMapSize; i++){
-			for(var j=0; j<miniMapSize; j++){
-				$("#minimapContainer").append("<div id='mp_tile_"+i+"_"+j+"' class='minimapTileContainer'></div>");
-				$("#mp_tile_"+i+"_"+j).css("width", (miniMapTileWidth) + "px");
-				$("#mp_tile_"+i+"_"+j).css("left", ( (-i*miniMapTileWidth/2) + (j*miniMapTileWidth/2) ) + "px");
-				$("#mp_tile_"+i+"_"+j).css("top", ( (i*miniMapTileHeight/2) + (j*miniMapTileHeight/2) ) + "px" );
-				$("#mp_tile_"+i+"_"+j).html( loadedimages[6].cloneNode(true) );
-				currentObject.updateMiniMap( currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y );
-			}
-		}
-	}
-
-	this.updateMiniMap = function (_centerX, _centerY) {
-		var maxLimitX = (mapWidth - parseInt(miniMapSize/2));
-		var maxLimitY = (mapHeight - parseInt(miniMapSize/2));
-		var minLimitX = parseInt(miniMapSize/2)+1;
-		var minLimitY = parseInt(miniMapSize/2)+1;
-
-
-		if( _centerX  > maxLimitX ){ //restrains minimap center position.
-			_centerX = maxLimitX;
-		}
-		if( _centerX < minLimitX){
-			_centerX = minLimitX;
-		}
-		if( _centerY  > maxLimitY ){
-			_centerY = maxLimitY;
-		}
-		if( _centerY < minLimitY){
-			_centerY = minLimitY;
-		}
-
-		var startX = _centerX -  Math.round( miniMapSize/2 );
-		var startY = _centerY -  Math.round( miniMapSize/2 );		
-
-		for(var i=0; i<miniMapSize; i++){
-			for(var j=0; j<miniMapSize; j++){
-				$("#mp_tile_"+i+"_"+j).css("opacity", currentMapController.MinimapReceiveTileImageResult( j+startX,  i+startY ) );
-				if(currentPlayerPositionAtMap.x == j+startX && currentPlayerPositionAtMap.y == i+startY){ //move player indicator to minimap
-					$("#mp_hero").css("left", $("#mp_tile_"+i+"_"+j).css("left") );
-					$("#mp_hero").css("top", $("#mp_tile_"+i+"_"+j).css("top") );
-				}
-			}
-		}
 	}
 
 	this.setEvents = function () {
@@ -338,8 +336,8 @@ function Gameplay() {
 	this.step = function () {
 		currentObject.playerStep();
 		currentObject.enemyStep();
+		currentMapController.updateMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y);
 		currentObject.updateDraw();
-		currentObject.updateMiniMap(currentPlayerPositionAtMap.x, currentPlayerPositionAtMap.y);
 	}
 
 	this.playerStep = function () {		

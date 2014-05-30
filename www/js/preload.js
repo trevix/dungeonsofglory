@@ -7,7 +7,10 @@ var _sources = ['img/tiles/t_base.png',
                 'img/tiles/minimap_wall.png', //5
                 'img/tiles/minimap_floor.png',
                 'img/buttons/direction_button.png',
-                'img/tiles/minimap_hero.png'];
+                'img/tiles/minimap_hero.png',
+                'img/enemy_test.png',
+                'img/item_test.png' //10
+                ]; 
 
 
 

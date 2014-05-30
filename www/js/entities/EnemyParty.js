@@ -1,5 +1,8 @@
-function EnemyParty (_frontLeftEnemy, _frontRightEnemy, _backLeftEnemy, _backRightEnemy) {
-	
+function EnemyParty (_x, _y, _enemies) { //enemies shall be a [];
+	var currentPartyFace;
+	this.x = _x;
+	this.y = _y;
+
 	var enemyPartyPositions = {
 		"front-left":"",
 		"front-right":"",
@@ -7,7 +10,7 @@ function EnemyParty (_frontLeftEnemy, _frontRightEnemy, _backLeftEnemy, _backRig
 		"back-right":"",
 	};
 
-	var currentPartyFace;
+	
 
 	this.getCurrentPartyFace = function () {
 		return currentPartyFace;
